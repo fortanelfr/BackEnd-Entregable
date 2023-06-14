@@ -1,0 +1,56 @@
+[
+	{
+		"title": "caja_1",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 1
+	},
+	{
+		"title": "caja_2",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 2
+	},
+	{
+		"title": "caja_3",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 3
+	},
+	{
+		"title": "caja_4",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 4
+	},
+	{
+		"title": "caja_5",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 5
+	},
+	{
+		"title": "caja_6",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 6
+	}
+]
