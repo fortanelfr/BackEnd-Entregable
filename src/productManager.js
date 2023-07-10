@@ -28,6 +28,7 @@ addProduct = async (producto) => {
     try {
         const productos = await this.getProducts();
 
+
         if (productos.length === 0) {
             producto.id = 1;
         } else {
@@ -65,6 +66,25 @@ getProductById = async (idProduct) =>{
     }
 }
 
+updateProduct = async (idProduct,product) =>{
+
+    try {
+    const products = await this.getProducts();
+    const productIndex = products.findIndex(product => product.id === idProduct); 
+
+    if (productIndex === -1){
+        return "Not found";
+    } else {
+        products[productIndex] = {id:idProduct, ...product}
+        await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
+        return "Product updated";
+    }
+
+    } catch (error){
+        console.log(error);
+    }
+}
+
 
 deleteProduct = async (idProduct) =>{
 
@@ -77,14 +97,14 @@ deleteProduct = async (idProduct) =>{
     }
     
     //Filtramos el id que deseamos eliminar
-    const newProducts = products.filter(products => products.id != 6); 
+    const newProducts = products.filter(products => products.id != idProduct); 
   
 
 
     //Sobreescribimos el json
     await fs.promises.writeFile(this.path, JSON.stringify(newProducts, null, '\t'));
 
-    return newProducts
+    return "User deleted"
 
     } catch (error){
         console.log(error);

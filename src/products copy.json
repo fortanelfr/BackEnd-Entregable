@@ -72,12 +72,21 @@
 		"id": 8
 	},
 	{
-		"id": 9,
 		"title": "caja_9",
-		"descripcion": "cambio",
-		"price": "180",
+		"descripcion": "carton",
+		"price": "80",
 		"thumbnail": "...",
 		"code": "1231",
-		"stock": "6"
+		"stock": "6",
+		"id": 9
+	},
+	{
+		"title": "caja_10",
+		"descripcion": "carton",
+		"price": "80",
+		"thumbnail": "...",
+		"code": "1231",
+		"stock": "6",
+		"id": 10
 	}
 ]

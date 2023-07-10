@@ -4,6 +4,8 @@ import ProductManager from './productManager.js';
 const app = express();
 const manager = new ProductManager("./src/products.json");
 
+
+app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 
@@ -25,5 +27,55 @@ app.get("/products/:pid",async (req,res)=>{
 
 })
 
+
+app.post("/products", async (req,res)=>{
+    
+    const producto = req.body;
+
+    if(!producto.title){
+        return res.status(400).send({status:'error',error: "incomplete values"})
+    }
+    
+    await manager.addProduct(producto);
+    return res.status(400).send({status:'success',message:'user created'})   
+
+})
+
+
+app.put("/products/:id", async (req,res)=>{
+    
+    const producto = req.body;
+    const productId = Number(req.params.id)
+
+    if(!producto.title){
+        return res.status(400).send({status:'error',error: "incomplete values"})
+    }
+    
+    const respuesta = await manager.updateProduct(productId,producto);
+    if(respuesta === "Not found"){
+        return res.status(400).send({status:'error',error: respuesta})
+    } else {
+        return res.status(200).send({status:'success',message:respuesta})
+    }
+       
+
+})
+
+
+
+app.delete ("/products/:id",async (req,res)=>{
+    const productId = Number(req.params.id);
+    
+
+    const respuesta = await manager.deleteProduct(productId);
+    if(respuesta === "Not found"){
+        return res.status(400).send({status:'error',error: respuesta})
+    } else {
+        return res.status(200).send({status:'success',message:respuesta})
+    }
+
+
+
+})
 
 app.listen(8080,() => console.log('Levantando el puerto 8080'))
