@@ -1,15 +1,15 @@
 import express from 'express';
-import ProductManager from './productManager.js';
+import productRouter from './routes/products.router.js'
+import cartRouter from './routes/carts.router.js'
 
 const app = express();
-const manager = new ProductManager("./src/products.json");
-
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+app.use('/api/products',productRouter);
+app.use('/api/cart',cartRouter);
 
-
-
+/*
 app.get("/products",async (req,res)=>{
     const productos = await manager.getProducts();
     
@@ -65,9 +65,8 @@ app.put("/products/:id", async (req,res)=>{
 
 app.delete ("/products/:id",async (req,res)=>{
     const productId = Number(req.params.id);
-    
-
     const respuesta = await manager.deleteProduct(productId);
+
     if(respuesta === "Not found"){
         return res.status(400).send({status:'error',error: respuesta})
     } else {
@@ -77,5 +76,6 @@ app.delete ("/products/:id",async (req,res)=>{
 
 
 })
+*/
 
 app.listen(8080,() => console.log('Levantando el puerto 8080'))

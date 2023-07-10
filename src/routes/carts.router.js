@@ -2,13 +2,12 @@ import { Router } from "express";
 import ProductManager from './productManager.js';
 
 const router = Router();
-const manager = new ProductManager("./src/routes/products.json");
+const manager = new ProductManager("./src/carts.json");
 
 
 
 
-
-router.get("/",async (req,res)=>{
+router.get("/carts",async (req,res)=>{
     const productos = await manager.getProducts();
     
     let {limit} = req.query;
@@ -16,7 +15,7 @@ router.get("/",async (req,res)=>{
 
 })
 
-router.get("/:pid",async (req,res)=>{
+router.get("/carts/:pid",async (req,res)=>{
     
     let pid = parseInt(req.params.pid);
 
@@ -26,7 +25,7 @@ router.get("/:pid",async (req,res)=>{
 })
 
 
-router.post("/", async (req,res)=>{
+router.post("/carts", async (req,res)=>{
     
     const producto = req.body;
 
@@ -40,7 +39,7 @@ router.post("/", async (req,res)=>{
 })
 
 
-router.put("/:id", async (req,res)=>{
+router.put("/carts/:id", async (req,res)=>{
     
     const producto = req.body;
     const productId = Number(req.params.id)
@@ -61,7 +60,7 @@ router.put("/:id", async (req,res)=>{
 
 
 
-router.delete ("/:id",async (req,res)=>{
+router.delete ("/carts/:id",async (req,res)=>{
     const productId = Number(req.params.id);
     const respuesta = await manager.deleteProduct(productId);
     
@@ -74,5 +73,6 @@ router.delete ("/:id",async (req,res)=>{
 
 
 })
+
 
 export default router;
