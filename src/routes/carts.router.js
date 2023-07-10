@@ -1,41 +1,57 @@
 import { Router } from "express";
-import ProductManager from '../managers/productManager.js';
+import CartManager from '../managers/cartManager.js';
 
 const router = Router();
-const manager = new ProductManager("./src/files/carts.json");
+const manager = new CartManager("./src/files/carts.json");
 
 
-
-
-router.get("/carts",async (req,res)=>{
-    const productos = await manager.getProducts();
+router.get("/",async (req,res)=>{
+    const carritos = await manager.getCarts();
     
     let {limit} = req.query;
-    res.send(productos.slice(0, limit))
+    res.send(carritos.slice(0, limit))
 
 })
 
-router.get("/carts/:pid",async (req,res)=>{
+router.get("/:cid",async (req,res)=>{
     
-    let pid = parseInt(req.params.pid);
+    let cid = parseInt(req.params.cid);
 
-    const productos = await manager.getProductById(pid);
-    res.send(productos);
+    const carrito = await manager.getCartById(cid);
+    res.send(carrito);
 
 })
 
 
-router.post("/carts", async (req,res)=>{
+router.post("/", async (req,res)=>{
     
-    const producto = req.body;
+    const carrito = req.body;
 
-    if(!producto.title){
-        return res.status(400).send({status:'error',error: "incomplete values"})
+    if(carrito.products.length === 0){
+        return res.status(400).send({status:'error',error: "The list of products is empty"})
     }
     
-    await manager.addProduct(producto);
+    await manager.addCart(carrito);
     return res.status(400).send({status:'success',message:'user created'})   
 
+})
+
+
+router.post("/:cid/product/:pid", async (req,res)=>{
+    
+    const quantity = req.body.quantity;
+    let cid = parseInt(req.params.cid);
+    let pid = parseInt(req.params.pid);
+
+    const respuesta = await manager.addProductToCar(cid,pid,quantity);
+
+    
+
+    if(respuesta === "Cart not found"){
+        return res.status(400).send({status:'error',error: respuesta})
+    } else {
+        return res.status(200).send({status:'success',message:respuesta})
+    }
 })
 
 
