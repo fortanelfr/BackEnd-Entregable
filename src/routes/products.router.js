@@ -30,13 +30,13 @@ router.post("/", async (req,res)=>{
     
     const producto = req.body;
 
-    if(!producto.title){
-        return res.status(400).send({status:'error',error: "incomplete values"})
-    }
-    
-    await manager.addProduct(producto);
-    return res.status(400).send({status:'success',message:'user created'})   
+    const respuesta = await manager.addProduct(producto);
 
+    if(respuesta === 'Product created'){
+        return res.status(200).send({status:'success',message:respuesta}) 
+    } else {
+        return res.status(400).send({status:'error',error: respuesta})
+    }          
 })
 
 

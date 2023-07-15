@@ -27,21 +27,33 @@ async getProducts() {
 addProduct = async (producto) => {
     try {
         const productos = await this.getProducts();
+        
+        if (!producto.title || !producto.description || !producto.code || !producto.price
+            || !producto.status || !producto.stock || !producto.category){
+                return "incomplete values";
+            }
+
+        if (isNaN(producto.price) || typeof(variable) == "boolean" || isNaN(producto.stock)){
+                return "incorrect format";
+            }
 
 
-        if (productos.length === 0) {
-            producto.id = 1;
-        } else {
-            producto.id = productos[productos.length - 1].id + 1;
+        var id_nuevo = 0;
+    
+        for (var i=0 ; i<productos.length ; i++) {
+            
+            if (id_nuevo == null || parseInt(productos[i]["id"]) > parseInt(id_nuevo))
+            id_nuevo = productos[i]["id"];
         }
-       
+        
+        producto['id'] = id_nuevo + 1;
 
 
         productos.push(producto);
 
         await fs.promises.writeFile(this.path, JSON.stringify(productos, null, '\t'));
 
-        return producto;
+        return 'Product created';
     } catch (error) {
         console.log(error);
     }
@@ -75,6 +87,8 @@ updateProduct = async (idProduct,product) =>{
     if (productIndex === -1){
         return "Not found";
     } else {
+
+
 
         for (let key in product) {
             products[productIndex][key] = product[key];
