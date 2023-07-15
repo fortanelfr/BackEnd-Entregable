@@ -36,7 +36,10 @@ addProduct = async (producto) => {
         if (isNaN(producto.price) || typeof(variable) == "boolean" || isNaN(producto.stock)){
                 return "incorrect format";
             }
-
+    
+        if (productos.findIndex(product => product.code == producto.code) != -1){
+            return "the code already exists"
+        }
 
         var id_nuevo = 0;
     

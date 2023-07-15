@@ -75,7 +75,7 @@ getCartById = async (idCart) =>{
 
 addProductToCar = async (idCart,idProduct,quantity) =>{
 
-    const manager = new ProductManager("../files/carts.json");
+    const manager = new ProductManager("./src/files/products.json");
 
 
     try {
@@ -89,7 +89,7 @@ addProductToCar = async (idCart,idProduct,quantity) =>{
         if(productIndex != -1){//Si el producto ya se encuentra en products
             console.log(carts[cartsIndex].products)
             carts[cartsIndex].products[productIndex].quantity = quantity;
-
+        
         } else if (await manager.getProductById(idProduct) != 'Not found') { // Si el producto no está en la lista y existe en el catalogo de productos
             carts[cartsIndex].products.push({idProduct,quantity});
         } else { // Si el producto no existe en el catalogo

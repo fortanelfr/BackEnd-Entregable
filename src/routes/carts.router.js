@@ -46,10 +46,10 @@ router.post("/:cid/product/:pid", async (req,res)=>{
 
     
 
-    if(respuesta === "Cart not found"){
-        return res.status(400).send({status:'error',error: respuesta})
+    if(respuesta === "Cart has been updated"){
+        return res.status(200).send({status:'success',message: respuesta})
     } else {
-        return res.status(200).send({status:'success',message:respuesta})
+        return res.status(400).send({status:'error',error:respuesta})
     }
 })
 
