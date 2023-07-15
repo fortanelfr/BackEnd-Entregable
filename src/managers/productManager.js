@@ -75,7 +75,10 @@ updateProduct = async (idProduct,product) =>{
     if (productIndex === -1){
         return "Not found";
     } else {
-        products[productIndex] = {id:idProduct, ...product}
+
+        for (let key in product) {
+            products[productIndex][key] = product[key];
+        }
         await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
         return "Product updated";
     }

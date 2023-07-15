@@ -24,16 +24,15 @@ router.get("/:cid",async (req,res)=>{
 
 
 router.post("/", async (req,res)=>{
+    //Se crea un carrito vacio, lo unico que se calcula es su campo id y el campo products, el cual será un array vacio
     
-    const carrito = req.body;
-
-    if(carrito.products.length === 0){
-        return res.status(400).send({status:'error',error: "The list of products is empty"})
-    }
-    
-    await manager.addCart(carrito);
-    return res.status(400).send({status:'success',message:'user created'})   
-
+    const producto = req.body;
+    const respuesta = await manager.addCart();
+    if (respuesta ==='Error'){
+        return res.status(400).send({status:'error',error: respuesta})
+    } else {
+    return res.status(200).send({status:'success',message:'cart created'})
+    }   
 })
 
 

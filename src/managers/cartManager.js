@@ -1,13 +1,17 @@
 import fs from 'fs';
+import ProductManager from './productManager.js';
 //definir la clase CartManager
 
 
 export default class CartManager {
     constructor(path) {
         this.path = path;
+        
         //Defino el constructor "products"
         //va a tener un arreglo vacío => para que el listado de productos me apareza vacío
     }
+
+
 
 async getCarts() {
         try {
@@ -24,26 +28,28 @@ async getCarts() {
 }
 
 
-addCart = async (carrito) => {
+addCart = async () => {
     try {
         const carritos = await this.getCarts();
-
-
-        if (carritos.length === 0) {
-            carrito.id = 1;
-        } else {
-            carrito.id = carritos[carritos.length - 1].id + 1;
+        
+        var id_nuevo = 0;
+        
+        for (var i=0 ; i<carritos.length ; i++) {
+            
+            if (id_nuevo == null || parseInt(carritos[i]["id"]) > parseInt(id_nuevo))
+            id_nuevo = carritos[i]["id"];
         }
+        
+       id_nuevo = id_nuevo + 1;
        
-
-
-        carritos.push(carrito);
+        carritos.push({"id":id_nuevo,"products":[]});
 
         await fs.promises.writeFile(this.path, JSON.stringify(carritos, null, '\t'));
 
         return "Cart added";
     } catch (error) {
         console.log(error);
+        return "Error"
     }
 }
 
@@ -69,6 +75,9 @@ getCartById = async (idCart) =>{
 
 addProductToCar = async (idCart,idProduct,quantity) =>{
 
+    const manager = new ProductManager("../files/carts.json");
+
+
     try {
     const carts = await this.getCarts();
     const cartsIndex = carts.findIndex(cart => cart.id === idCart); 
@@ -77,11 +86,14 @@ addProductToCar = async (idCart,idProduct,quantity) =>{
         return "Cart not found";
     } else {
         const productIndex = carts[cartsIndex].products.findIndex(product => product.idProduct === idProduct); 
-        if(productIndex ===1){//Si el producto existe
-
+        if(productIndex != -1){//Si el producto ya se encuentra en products
+            console.log(carts[cartsIndex].products)
             carts[cartsIndex].products[productIndex].quantity = quantity;
-        } else {
+
+        } else if (await manager.getProductById(idProduct) != 'Not found') { // Si el producto no está en la lista y existe en el catalogo de productos
             carts[cartsIndex].products.push({idProduct,quantity});
+        } else { // Si el producto no existe en el catalogo
+            return "Product not found";
         }
 
         await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
