@@ -1,0 +1,56 @@
+<div>
+    <h1>Agregar Producto:</h1>
+<form id="form" action="">
+  <ul>
+    <li>
+      <label for="title">title:</label>
+      <input type="text" id="title"/>
+    </li>
+    <li>
+      <label for="description">description:</label>
+      <input type="email" id="description"  />
+    </li>
+    <li>
+      <label for="code">code:</label>
+      <input type="Es necesario" id="code"  />
+    </li>
+    <li>
+      <label for="price">price:</label>
+      <input type="email" id="price"  />
+    </li>
+    <li>
+      <label for="status">status:</label>
+      <input type="email" id="status"  />
+    </li>
+    <li>
+      <label for="stock">stock:</label>
+      <input type="email" id="stock"  />
+    </li>
+    <li>
+      <label for="category">category:</label>
+      <input type="email" id="category"  />
+    </li>
+  </ul>
+</form>
+<button type="submit" id="button_creacion">Submit form</button>
+
+    <h1>Eliminar Producto por Id:</h1>
+    <input id="textbox">
+    <button type="submit" id="button_borrar">Submit form</button>
+  <table id="table">
+    <thead>
+      <th>id</th>
+      <th>title</th>
+      <th>description</th>
+      <th>code</th>
+      <th>price</th>
+      <th>status</th>
+      <th>stock</th>
+      <th>category</th>
+    </thead>
+    <tbody id="body">
+    </tbody>
+  </table>
+</div>
+<script src = "/socket.io/socket.io.js"></script>
+<script src = "/js/realtime.js"></script>

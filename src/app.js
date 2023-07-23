@@ -5,6 +5,10 @@ import cartRouter from './routes/carts.router.js'
 import viewsRouter from './routes/views.router.js'
 import __dirname from './utils.js'
 import {Server} from 'socket.io'
+import ProductManager from './managers/productManager.js';
+
+
+const manager = new ProductManager("./src/files/products.json");
 
 const app = express();
 const httpServer = app.listen(8080,()=> console.log("Listening 8080"))
@@ -23,18 +27,29 @@ app.use(express.static(__dirname + '/public'))
 app.use('/',viewsRouter);
 
 
-socketServer.on('connection',socket=>{
+socketServer.on('connection',async socket=>{
     console.log('Nuevo cliente conectado')
 
-    socket.on('message',data=>{
+    socket.on('delete',async data=>{
+        const respuesta = await manager.deleteProduct(parseInt(data))
         console.log(data)
+
+        socket.emit('updateTable',await manager.getProducts())
     })
+    
+    socket.on('create',async data=>{
+        const respuesta = await manager.addProduct(data)
+        console.log(respuesta)
 
-    socket.emit('socket_actual','1')
+        socket.emit('updateTable',await manager.getProducts())
+    })
+    
 
-    socket.broadcast.emit('socket excluido','2')
+    //socket.broadcast.emit('socket excluido','2')
 
-    socketServer.emit('para todos','3')
+    //socketServer.emit('para todos','3')
+    
+    socket.emit('updateTable',await manager.getProducts())
     
 })
 

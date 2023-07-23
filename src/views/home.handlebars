@@ -1,0 +1,18 @@
+<div>
+    <h1>hola {{user.name}}</h1>
+    {{#each productos}}
+        <div>
+            <p> 
+              id: {{this.id}},
+              title: {{this.title}}, 
+              description: {{this.description}},
+              code: {{this.code}},
+              price: {{this.price}},
+              status: {{this.status}},
+              stock: {{this.stock}},
+              category: {{this.category}}</p>
+        </div>
+    {{/each}}
+</div>
+<script src = "/socket.io/socket.io.js"></script>
+<script src = "/js/index.js"></script>
