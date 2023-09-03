@@ -1,4 +1,6 @@
 import fs from 'fs';
+import Product from "../models/product.js";
+import { log } from 'console';
 //definir la clase productmanager
 
 
@@ -9,6 +11,7 @@ export default class ProductManager {
         //va a tener un arreglo vacío => para que el listado de productos me apareza vacío
     }
 
+/*
 async getProducts() {
         try {
             if (fs.existsSync(this.path)) {
@@ -22,12 +25,20 @@ async getProducts() {
             console.log(error);
         }
 }
+*/
+async getProducts() {
+    try {
+        let all = await Product.find()
+        return all
+    } catch (error) {
+        return error
+    }
+}
 
 
 addProduct = async (producto) => {
     try {
-        const productos = await this.getProducts();
-        
+
         if (!producto.title || !producto.description || !producto.code || !producto.price
             || !producto.status || !producto.stock || !producto.category){
                 return "incomplete values";
@@ -36,28 +47,15 @@ addProduct = async (producto) => {
         if (isNaN(producto.price) || typeof(variable) == "boolean" || isNaN(producto.stock)){
                 return "incorrect format";
             }
-    
-        if (productos.findIndex(product => product.code == producto.code) != -1){
+
+
+        let one = await Product.create(producto)
+        console.log(one)
+        return 'Product created'
+    } catch (error) {
+        if (error.message.includes('E11000')){
             return "the code already exists"
         }
-
-        var id_nuevo = 0;
-    
-        for (var i=0 ; i<productos.length ; i++) {
-            
-            if (id_nuevo == null || parseInt(productos[i]["id"]) > parseInt(id_nuevo))
-            id_nuevo = productos[i]["id"];
-        }
-        
-        producto['id'] = id_nuevo + 1;
-
-
-        productos.push(producto);
-
-        await fs.promises.writeFile(this.path, JSON.stringify(productos, null, '\t'));
-
-        return 'Product created';
-    } catch (error) {
         console.log(error);
     }
 }
@@ -66,39 +64,31 @@ addProduct = async (producto) => {
 getProductById = async (idProduct) =>{
 
     try {
-    const products = await this.getProducts();
-    const productIndex = products.findIndex(product => product.id === idProduct); 
 
-    if (productIndex === -1){
-        return "Not found";
+        let product = await Product.findById(idProduct)
+        return product
+
+    } catch (error) {
+        return error
     }
 
-    const product = products [productIndex];
-    return product;
 
-    } catch (error){
-        console.log(error);
-    }
 }
 
 updateProduct = async (idProduct,product) =>{
 
     try {
-    const products = await this.getProducts();
-    const productIndex = products.findIndex(product => product.id === idProduct); 
+    const params = Object.keys(product) // req.body is the updates coming from API
+    const allowedMethods = ["title", "description","code","price","status","stock","category"];
+    const isValidOperation = params.every((param) => allowedMethods.includes(param));
 
-    if (productIndex === -1){
-        return "Not found";
-    } else {
-
-
-
-        for (let key in product) {
-            products[productIndex][key] = product[key];
-        }
-        await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
-        return "Product updated";
+    if (!isValidOperation) {
+        return "invalid fields";
     }
+    
+
+    let one = await Product.findByIdAndUpdate(idProduct,product,{new:true})
+    return one
 
     } catch (error){
         console.log(error);
@@ -109,24 +99,11 @@ updateProduct = async (idProduct,product) =>{
 deleteProduct = async (idProduct) =>{
 
     try {
-    const products = await this.getProducts();
-    const productIndex = products.findIndex(product => product.id === idProduct); 
-
-    if (productIndex === -1){
-        return "Not found";
-    }
-    
-    //Filtramos el id que deseamos eliminar
-    const newProducts = products.filter(products => products.id != idProduct); 
-  
-
-
-    //Sobreescribimos el json
-    await fs.promises.writeFile(this.path, JSON.stringify(newProducts, null, '\t'));
-
-    return "User deleted"
+        let one = await Product.findByIdAndDelete(idProduct);
+        return one
 
     } catch (error){
+    
         console.log(error);
     }
 }

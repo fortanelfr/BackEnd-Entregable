@@ -5,32 +5,57 @@ const router = Router();
 const manager = new ProductManager("./src/files/products.json");
 
 
-
-
-
-router.get("/",async (req,res)=>{
-    const productos = await manager.getProducts();
-    
+router.get("/",async (req,res,next)=>{
+    try {
     let {limit} = req.query;
-    res.send(productos.slice(0, limit))
+    let all = await manager.getProducts();
 
+
+    return res.status(200).json({
+        success:true,
+        response:all.slice(0, limit)
+    })
+    } catch (error) {
+        next(error)
+    }
 })
 
 router.get("/:pid",async (req,res)=>{
     
-    let pid = parseInt(req.params.pid);
+    let {pid} = req.params
 
-    const productos = await manager.getProductById(pid);
-    res.send(productos);
+    try{
+        // Verificamos si el pid ingresado es un ObjectId valido, en caso contrario se notifica
+        if (!pid.match(/^[0-9a-fA-F]{24}$/)) {
+            return res.status(400).json({
+                success:false,
+                response:"product id not valid"
+            })
+        }
+
+        const producto = await manager.getProductById(pid);
+    
+        if(producto) {
+            return res.status(200).json({
+                success:true,
+                response:producto
+            })
+        }
+        
+        return res.status(400).json({
+            success:false,
+            response:"product not found"
+        })
+
+    } catch (error) {
+        next(error)
+    }
 
 })
 
-
 router.post("/", async (req,res)=>{
     
-    const producto = req.body;
-
-    const respuesta = await manager.addProduct(producto);
+    const respuesta = await manager.addProduct(req.body);
 
     if(respuesta === 'Product created'){
         return res.status(200).send({status:'success',message:respuesta}) 
@@ -40,39 +65,60 @@ router.post("/", async (req,res)=>{
 })
 
 
-router.put("/:id", async (req,res)=>{
-    
-    const producto = req.body;
-    const productId = Number(req.params.id)
+router.put("/:id", async (req,res,next)=>{
+    try {
+        let {id} = req.params
+        let data =  req.body
+        let one = await manager.updateProduct(id,data)
 
-    if(!producto.title){
-        return res.status(400).send({status:'error',error: "incomplete values"})
-    }
-    
-    const respuesta = await manager.updateProduct(productId,producto);
-    if(respuesta === "Not found"){
-        return res.status(400).send({status:'error',error: respuesta})
-    } else {
-        return res.status(200).send({status:'success',message:respuesta})
-    }
-       
+        if(one ==="invalid fields"){
+            return res.status(404).json({
+                success:true,
+                message:one
+            })
+        }
 
+        if (one){
+            return res.status(201).json({
+                success:true,
+                message:'product id: ' + one._id + ' modified'
+            })
+
+        }
+        return res.status(404).json({
+            success:false,
+            message:'product id not found'
+        })
+        
+        
+    } catch (error) {
+        next(error)
+        
+    }         
 })
 
 
+router.delete("/:id", async (req,res,next)=>{
+    try {
 
-router.delete ("/:id",async (req,res)=>{
-    const productId = Number(req.params.id);
-    const respuesta = await manager.deleteProduct(productId);
-    
-    if(respuesta === "Not found"){
-        return res.status(400).send({status:'error',error: respuesta})
-    } else {
-        return res.status(200).send({status:'success',message:respuesta})
-    }
+        let {id} = req.params
 
-
-
+        let one = await manager.deleteProduct(id);
+        if (one) {
+            return res.status(201).json({
+                success:true,
+                message:'product deleted'
+            })
+        } 
+        return res.status(404).json({
+            success:false,
+            message:'product id not found'
+        })
+        
+    } catch (error) {
+        next(error)
+        
+    }         
 })
 
 export default router;

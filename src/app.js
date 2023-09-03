@@ -6,12 +6,21 @@ import viewsRouter from './routes/views.router.js'
 import __dirname from './utils.js'
 import {Server} from 'socket.io'
 import ProductManager from './managers/productManager.js';
+import { connect } from 'mongoose';
 
 
 const manager = new ProductManager("./src/files/products.json");
+const PORT = 8080
+const ready = ()=> {
+      console.log('server ready on port '+ PORT)
+      connect('mongodb+srv://fortanelfr:1234@proyectos.0tcjtyo.mongodb.net/ecommerce')
+           .then(()=> console.log('database connected'))
+           .catch( err => console.log(err))
+} 
+
 
 const app = express();
-const httpServer = app.listen(8080,()=> console.log("Listening 8080"))
+const httpServer = app.listen(PORT,ready)
 
 const socketServer = new Server(httpServer);
 

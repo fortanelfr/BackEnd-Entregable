@@ -3,6 +3,7 @@ import CartManager from '../managers/cartManager.js';
 
 const router = Router();
 const manager = new CartManager("./src/files/carts.json");
+import Cart from "../models/cart.js";
 
 
 router.get("/",async (req,res)=>{
@@ -22,7 +23,7 @@ router.get("/:cid",async (req,res)=>{
 
 })
 
-
+/*
 router.post("/", async (req,res)=>{
     //Se crea un carrito vacio, lo unico que se calcula es su campo id y el campo products, el cual será un array vacio
     
@@ -35,6 +36,37 @@ router.post("/", async (req,res)=>{
     }   
 })
 
+
+router.post("/:cid/product/:pid", async (req,res)=>{
+    
+    const quantity = req.body.quantity;
+    let cid = parseInt(req.params.cid);
+    let pid = parseInt(req.params.pid);
+
+    const respuesta = await manager.addProductToCar(cid,pid,quantity);
+
+    
+
+    if(respuesta === "Cart has been updated"){
+        return res.status(200).send({status:'success',message: respuesta})
+    } else {
+        return res.status(400).send({status:'error',error:respuesta})
+    }
+})
+*/
+
+
+
+router.post("/", async (req,res)=>{
+    //Se crea un carrito vacio, lo unico que se calcula es su campo id y el campo products, el cual será un array vacio
+    
+    let one = await Cart.create([null])
+    if (one ==='Error'){
+        return res.status(400).send({status:'error',error: respuesta})
+    } else {
+    return res.status(200).send({status:'success',message:'cart created'})
+    }   
+})
 
 router.post("/:cid/product/:pid", async (req,res)=>{
     
