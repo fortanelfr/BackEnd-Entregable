@@ -30,8 +30,8 @@ app.set('view engine', 'handlebars');
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use('/api/products',productRouter);
 app.use('/api/carts',cartRouter);
+app.use('/api/products',productRouter);
 app.use(express.static(__dirname + '/public'))
 app.use('/',viewsRouter);
 

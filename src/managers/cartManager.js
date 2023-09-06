@@ -1,6 +1,10 @@
 import fs from 'fs';
 import ProductManager from './productManager.js';
+import Cart from "../models/cart.js";
 //definir la clase CartManager
+
+
+const manager = new ProductManager("./src/files/carts.json");
 
 
 export default class CartManager {
@@ -15,13 +19,8 @@ export default class CartManager {
 
 async getCarts() {
         try {
-            if (fs.existsSync(this.path)) {
-                const data = await fs.promises.readFile(this.path, 'utf-8');
-                const carritos = JSON.parse(data);
-                return carritos;
-            } else {
-                return [];
-            }
+            let all = await Cart.find()
+            return all
         } catch (error) {
             console.log(error);
         }
@@ -30,23 +29,8 @@ async getCarts() {
 
 addCart = async () => {
     try {
-        const carritos = await this.getCarts();
-        
-        var id_nuevo = 0;
-        
-        for (var i=0 ; i<carritos.length ; i++) {
-            
-            if (id_nuevo == null || parseInt(carritos[i]["id"]) > parseInt(id_nuevo))
-            id_nuevo = carritos[i]["id"];
-        }
-        
-       id_nuevo = id_nuevo + 1;
-       
-        carritos.push({"id":id_nuevo,"products":[]});
-
-        await fs.promises.writeFile(this.path, JSON.stringify(carritos, null, '\t'));
-
-        return "Cart added";
+        let one = await Cart.create([null])
+        return one
     } catch (error) {
         console.log(error);
         return "Error"
@@ -57,16 +41,8 @@ addCart = async () => {
 getCartById = async (idCart) =>{
 
     try {
-    const carts = await this.getCarts();
-    const cartsIndex = carts.findIndex(cart => cart.id === idCart); 
-
-    if (cartsIndex === -1){
-        return "Not found";
-    }
-
-    const cart = carts [cartsIndex];
-    return cart.products;//La ruta GET /:cid deberá listar los productos que pertenezcan al carrito con el parámetro cid proporcionados.
-
+        let one = await Cart.find({_id:idCart})
+        return one
     } catch (error){
         console.log(error);
     }
@@ -74,32 +50,36 @@ getCartById = async (idCart) =>{
 
 
 addProductToCar = async (idCart,idProduct,quantity) =>{
-
-    const manager = new ProductManager("./src/files/products.json");
-
-
     try {
-    const carts = await this.getCarts();
-    const cartsIndex = carts.findIndex(cart => cart.id === idCart); 
 
-    if (cartsIndex === -1){
-        return "Cart not found";
-    } else {
-        const productIndex = carts[cartsIndex].products.findIndex(product => product.idProduct === idProduct); 
-        if(productIndex != -1){//Si el producto ya se encuentra en products
-            console.log(carts[cartsIndex].products)
-            carts[cartsIndex].products[productIndex].quantity = quantity;
-        
-        } else if (await manager.getProductById(idProduct) != 'Not found') { // Si el producto no está en la lista y existe en el catalogo de productos
-            carts[cartsIndex].products.push({idProduct,quantity});
-        } else { // Si el producto no existe en el catalogo
-            return "Product not found";
+        let cartID = await Cart.find({_id:idCart})
+        if (cartID.length == 0){
+            return "Cart not found"
         }
 
-        await fs.promises.writeFile(this.path, JSON.stringify(carts, null, '\t'));
-        return "Cart has been updated";
-
-    }
+        let productID = await manager.getProductById(idProduct)
+        if (productID === null){
+            return "Product not found"
+        }
+        
+         
+        let cId_pId = await Cart.find({_id:idCart,'products.product_id':idProduct})
+        //Si el producto no se encuentra en el carrito 
+        if (cId_pId.length == 0){
+            let one = await Cart.findOneAndUpdate({_id:idCart},
+                {"$push": {products:{
+                                  product_id:idProduct,
+                                  quantity:quantity
+                }}},
+                 {new : true, upsert: true }
+                )
+            return "Cart has been updated"
+        } else {// En caso de que el producto ya se encuentre en el carrito
+            let one = await Cart.updateOne({_id:idCart,'products.product_id':idProduct},
+                                   {$set: { 'products.$.quantity': quantity}, },
+                                   {new : true})
+            return "Cart has been updated"
+        }
 
     } catch (error){
         console.log(error);
@@ -126,33 +106,26 @@ updateProduct = async (idProduct,product) =>{
         console.log(error);
     }
 }
+*/
 
-
-deleteProduct = async (idProduct) =>{
+deleteProduct = async (idCart,idProduct) =>{
 
     try {
-    const products = await this.getProducts();
-    const productIndex = products.findIndex(product => product.id === idProduct); 
-
-    if (productIndex === -1){
-        return "Not found";
-    }
-    
-    //Filtramos el id que deseamos eliminar
-    const newProducts = products.filter(products => products.id != idProduct); 
-  
-
-
-    //Sobreescribimos el json
-    await fs.promises.writeFile(this.path, JSON.stringify(newProducts, null, '\t'));
-
-    return "User deleted"
+        let cId_pId = await Cart.find({_id:idCart,'products.product_id':idProduct})
+        //Si el producto o el carro no se encuentran en la lista
+        if (cId_pId.length == 0){
+            return "Cart or Product not found"
+        } else {// En caso de que el producto ya se encuentre en el carrito
+            let one = await Cart.updateOne({_id:idCart},
+                                        {$pull: {products:{product_id:idProduct}}})
+            return "Cart has been updated"
+        }
 
     } catch (error){
         console.log(error);
     }
 }
-*/
+
 }
 
 

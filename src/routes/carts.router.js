@@ -3,64 +3,43 @@ import CartManager from '../managers/cartManager.js';
 
 const router = Router();
 const manager = new CartManager("./src/files/carts.json");
-import Cart from "../models/cart.js";
 
 
 router.get("/",async (req,res)=>{
-    const carritos = await manager.getCarts();
-    
-    let {limit} = req.query;
-    res.send(carritos.slice(0, limit))
+    try {
+        let all = await manager.getCarts()
+        return res.status(200).json({
+                success:true,
+                response:all
+        })
+    }
+    catch (error) {
+        next(error)
+    }
 
 })
 
 router.get("/:cid",async (req,res)=>{
     
-    let cid = parseInt(req.params.cid);
+    let {cid} = req.params
 
-    const carrito = await manager.getCartById(cid);
-    res.send(carrito);
-
-})
-
-/*
-router.post("/", async (req,res)=>{
-    //Se crea un carrito vacio, lo unico que se calcula es su campo id y el campo products, el cual será un array vacio
-    
-    const producto = req.body;
-    const respuesta = await manager.addCart();
-    if (respuesta ==='Error'){
-        return res.status(400).send({status:'error',error: respuesta})
-    } else {
-    return res.status(200).send({status:'success',message:'cart created'})
-    }   
-})
-
-
-router.post("/:cid/product/:pid", async (req,res)=>{
-    
-    const quantity = req.body.quantity;
-    let cid = parseInt(req.params.cid);
-    let pid = parseInt(req.params.pid);
-
-    const respuesta = await manager.addProductToCar(cid,pid,quantity);
-
-    
-
-    if(respuesta === "Cart has been updated"){
-        return res.status(200).send({status:'success',message: respuesta})
-    } else {
-        return res.status(400).send({status:'error',error:respuesta})
+    try {
+        let all = await manager.getCartById(cid)
+        return res.status(200).json({
+                success:true,
+                response:all
+        })
     }
+    catch (error) {
+        next(error)
+    }
+
 })
-*/
-
-
 
 router.post("/", async (req,res)=>{
     //Se crea un carrito vacio, lo unico que se calcula es su campo id y el campo products, el cual será un array vacio
     
-    let one = await Cart.create([null])
+    let one = await manager.addCart()
     if (one ==='Error'){
         return res.status(400).send({status:'error',error: respuesta})
     } else {
@@ -68,15 +47,11 @@ router.post("/", async (req,res)=>{
     }   
 })
 
-router.post("/:cid/product/:pid", async (req,res)=>{
-    
-    const quantity = req.body.quantity;
-    let cid = parseInt(req.params.cid);
-    let pid = parseInt(req.params.pid);
+router.put("/:cid/product/:pid/:units", async (req,res)=>{
 
-    const respuesta = await manager.addProductToCar(cid,pid,quantity);
+    let {cid,pid,units} = req.params
 
-    
+    let respuesta = await manager.addProductToCar(cid,pid,units)
 
     if(respuesta === "Cart has been updated"){
         return res.status(200).send({status:'success',message: respuesta})
@@ -86,40 +61,17 @@ router.post("/:cid/product/:pid", async (req,res)=>{
 })
 
 
-router.put("/carts/:id", async (req,res)=>{
-    
-    const producto = req.body;
-    const productId = Number(req.params.id)
-
-    if(!producto.title){
-        return res.status(400).send({status:'error',error: "incomplete values"})
-    }
-    
-    const respuesta = await manager.updateProduct(productId,producto);
-    if(respuesta === "Not found"){
-        return res.status(400).send({status:'error',error: respuesta})
-    } else {
-        return res.status(200).send({status:'success',message:respuesta})
-    }
-       
-
+router.delete("/:cid/product/:pid", async (req,res)=>{
+    try{
+        let {cid,pid} = req.params
+        let cId_pId = await manager.deleteProduct(cid,pid)
+        return res.status(200).json({
+            success:true,
+            response:cId_pId
+    })
+    } catch(error){
+        console.log(error)
+    } 
 })
-
-
-
-router.delete ("/carts/:id",async (req,res)=>{
-    const productId = Number(req.params.id);
-    const respuesta = await manager.deleteProduct(productId);
-    
-    if(respuesta === "Not found"){
-        return res.status(400).send({status:'error',error: respuesta})
-    } else {
-        return res.status(200).send({status:'success',message:respuesta})
-    }
-
-
-
-})
-
 
 export default router;
