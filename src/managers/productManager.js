@@ -1,4 +1,3 @@
-import fs from 'fs';
 import Product from "../models/product.js";
 import { log } from 'console';
 import { createRequire } from 'module';
@@ -8,9 +7,6 @@ const require = createRequire(import.meta.url);
 
 export default class ProductManager {
     constructor() {
-        //this.path = path;
-        //Defino el constructor "products"
-        //va a tener un arreglo vacío => para que el listado de productos me apareza vacío
     }
 
 async getProducts() {

@@ -1,18 +1,12 @@
-import fs from 'fs';
 import ProductManager from './productManager.js';
 import Cart from "../models/cart.js";
-//definir la clase CartManager
 
 
-const manager = new ProductManager("./src/files/carts.json");
+const manager = new ProductManager();
 
 
 export default class CartManager {
-    constructor(path) {
-        this.path = path;
-        
-        //Defino el constructor "products"
-        //va a tener un arreglo vacío => para que el listado de productos me apareza vacío
+    constructor() {
     }
 
 
@@ -87,26 +81,6 @@ addProductToCar = async (idCart,idProduct,quantity) =>{
 }
 
 
-/*
-updateProduct = async (idProduct,product) =>{
-
-    try {
-    const products = await this.getProducts();
-    const productIndex = products.findIndex(product => product.id === idProduct); 
-
-    if (productIndex === -1){
-        return "Not found";
-    } else {
-        products[productIndex] = {id:idProduct, ...product}
-        await fs.promises.writeFile(this.path, JSON.stringify(products, null, '\t'));
-        return "Product updated";
-    }
-
-    } catch (error){
-        console.log(error);
-    }
-}
-*/
 
 deleteProduct = async (idCart,idProduct) =>{
 

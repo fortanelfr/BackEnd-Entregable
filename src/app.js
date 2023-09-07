@@ -9,7 +9,7 @@ import ProductManager from './managers/productManager.js';
 import { connect } from 'mongoose';
 
 
-const manager = new ProductManager("./src/files/products.json");
+const manager = new ProductManager();
 const PORT = 8080
 const ready = ()=> {
       console.log('server ready on port '+ PORT)
