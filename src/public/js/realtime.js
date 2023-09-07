@@ -27,18 +27,6 @@ button_creacion.addEventListener("click", evt =>{
     producto = {title:title_v.value,description:description_v.value,code:code_v.value,price:price_v.value,status:status_v.value,stock:stock_v.value,category:category_v.value};
     socket.emit('create', producto);
     
-    /*
-    title_v.value = " ";
-    description_v.value="";
-    code_v.value = "";
-    price_v.value = "";
-    status_v.value = "";
-    stock_v.value = "";
-    category_v.value = ""; 
-    */
-    
-
-
 });
 
 
@@ -89,7 +77,7 @@ socket.on('updateTable',data=>{
         let c8 = row.insertCell(7)
            
               // Add data to c1 and c2
-        c1.innerText = producto['id']
+        c1.innerText = producto['_id']
         c2.innerText = producto['title']
         c3.innerText = producto['description']
         c4.innerText = producto['code']

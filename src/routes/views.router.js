@@ -9,7 +9,9 @@ const manager = new ProductManager("./src/files/products.json");
 
 
 router.get("/",async (req,res)=>{
-    const productos = await manager.getProducts();
+    let productos = await manager.getProducts();
+
+    console.log(productos)
 
     let testUser = {
         name: 'fer',

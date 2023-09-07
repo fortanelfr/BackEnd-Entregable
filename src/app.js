@@ -40,27 +40,20 @@ socketServer.on('connection',async socket=>{
     console.log('Nuevo cliente conectado')
 
     socket.on('delete',async data=>{
-        const respuesta = await manager.deleteProduct(parseInt(data))
-        console.log(data)
+        const respuesta = await manager.deleteProduct(data)
 
         socket.emit('updateTable',await manager.getProducts())
     })
     
     socket.on('create',async data=>{
         const respuesta = await manager.addProduct(data)
-        console.log(respuesta)
 
         socket.emit('updateTable',await manager.getProducts())
     })
     
 
-    //socket.broadcast.emit('socket excluido','2')
-
-    //socketServer.emit('para todos','3')
     
     socket.emit('updateTable',await manager.getProducts())
     
 })
 
-
-//app.listen(8080,() => console.log('Levantando el puerto 8080'))

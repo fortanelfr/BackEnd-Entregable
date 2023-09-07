@@ -1,34 +1,21 @@
 import fs from 'fs';
 import Product from "../models/product.js";
 import { log } from 'console';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 //definir la clase productmanager
 
 
 export default class ProductManager {
-    constructor(path) {
-        this.path = path;
+    constructor() {
+        //this.path = path;
         //Defino el constructor "products"
         //va a tener un arreglo vacío => para que el listado de productos me apareza vacío
     }
 
-/*
-async getProducts() {
-        try {
-            if (fs.existsSync(this.path)) {
-                const data = await fs.promises.readFile(this.path, 'utf-8');
-                const productos = JSON.parse(data);
-                return productos;
-            } else {
-                return [];
-            }
-        } catch (error) {
-            console.log(error);
-        }
-}
-*/
 async getProducts() {
     try {
-        let all = await Product.find()
+        let all = await Product.find().lean()
         return all
     } catch (error) {
         return error
@@ -99,6 +86,9 @@ updateProduct = async (idProduct,product) =>{
 deleteProduct = async (idProduct) =>{
 
     try {
+        var mongoose = require('mongoose');
+        var idProduct = new mongoose.Types.ObjectId(idProduct.trim());
+
         let one = await Product.findByIdAndDelete(idProduct);
         return one
 
