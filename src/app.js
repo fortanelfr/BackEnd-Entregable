@@ -47,13 +47,15 @@ socketServer.on('connection',async socket=>{
     
     socket.on('create',async data=>{
         const respuesta = await manager.addProduct(data)
-
-        socket.emit('updateTable',await manager.getProducts())
+        socket.emit("respuestaCreacion",respuesta)
     })
+
+    
     
 
     
     socket.emit('updateTable',await manager.getProducts())
     
 })
+    
 

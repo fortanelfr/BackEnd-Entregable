@@ -1,17 +1,18 @@
 <div>
-    <h1>hola {{user.name}}</h1>
-    {{#each productos}}
+    <h1>Lista de todos los articulos</h1>
         <div>
+             {{#each productos}}
             <p> 
-              title: {{this.title}}, 
-              description: {{this.description}},
-              code: {{this.code}},
-              price: {{this.price}},
-              status: {{this.status}},
-              stock: {{this.stock}},
-              category: {{this.category}}</p>
+              id: {{./this._id}},
+              title: {{./this.title}}, 
+              description: {{./this.description}},
+              code: {{./this.code}},
+              price: {{./this.price}},
+              status: {{./this.status}},
+              stock: {{./this.stock}},
+              category: {{./this.category}}
+            </p>
+            {{/each}}
         </div>
-    {{/each}}
 </div>
-<script src = "/socket.io/socket.io.js"></script>
-<script src = "/js/index.js"></script>
+

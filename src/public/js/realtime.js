@@ -26,9 +26,9 @@ const button_creacion = document.getElementById('button_creacion');
 button_creacion.addEventListener("click", evt =>{
     producto = {title:title_v.value,description:description_v.value,code:code_v.value,price:price_v.value,status:status_v.value,stock:stock_v.value,category:category_v.value};
     socket.emit('create', producto);
-    
-});
 
+
+});
 
 
 

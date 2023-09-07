@@ -48,7 +48,10 @@ getProductById = async (idProduct) =>{
 
     try {
 
-        let product = await Product.findById(idProduct)
+        var mongoose = require('mongoose');
+        var idProduct = new mongoose.Types.ObjectId(idProduct.trim());
+
+        let product = await Product.find({_id:idProduct}).lean()
         return product
 
     } catch (error) {
