@@ -1,21 +1,22 @@
 <div>
     <h1>Primer Carrito</h1>
-        <div>
 
-            {{#each productos}}
+            {{#each productos.producto}}
             <p> 
-              id: {{./this.product_id._id}},
-              title: {{./this.product_id.title}}, 
-              description: {{./this.product_id.description}},
-              code: {{./this.product_id.code}},
-              price: {{./this.product_id.price}},
-              status: {{./this.product_id.status}},
-              stock: {{./this.product_id.stock}},
-              category: {{./this.product_id.category}}
+              id: {{./this.product_id}},
+              title: {{./this.title}}, 
+              description: {{./this.description}},
+              code: {{./this.code}},
+              price: {{./this.price}},
+              status: {{./this.status}},
+              stock: {{./this.stock}},
+              category: {{./this.category}},
+              quantity: {{./this.quantity }}
+              subtotal:{{./this.total}},
             </p>
             {{/each}}
-     
-
         </div>
+
+    <p>Total:{{productos.GranTotal}}</p>
 </div>
 

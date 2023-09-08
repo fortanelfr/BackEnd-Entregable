@@ -1,5 +1,7 @@
 import ProductManager from './productManager.js';
 import Cart from "../models/cart.js";
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 
 
 const manager = new ProductManager();
@@ -14,10 +16,6 @@ export default class CartManager {
 async getCarts() {
         try {
             //let all = await Cart.find().lean()
-
-            
-            
-            
             let all = await Cart.aggregate([
                {'$match': { _id : {$exists: true} }},
                {$unwind:"$products"},
@@ -34,13 +32,20 @@ async getCarts() {
                                      status:"$productObject.status",
                                      stock:"$productObject.stock",
                                      category:"$productObject.category",
-                                     quantity:'$products.quantity'
+                                     quantity:'$products.quantity',
+                                     total:{$multiply:["$productObject.price","$products.quantity"]}
                                      }
                            }},
                 
                 {$sort:{"producto.title":1}},
                 {$group:{_id: "$_id",
-                        "producto": { "$push": "$producto" }}}
+                        "producto": { "$push": "$producto" }}},        
+                {$project:{_id:1,
+                            producto:1,
+                            GranTotal:{
+                                $sum:"$producto.total"
+                            }
+                        }}
             ])
             
             
@@ -128,6 +133,52 @@ deleteProduct = async (idCart,idProduct) =>{
                                         {$pull: {products:{product_id:idProduct}}})
             return "Cart has been updated"
         }
+
+    } catch (error){
+        console.log(error);
+    }
+}
+
+
+calculateBill = async (cid) =>{
+
+    let mongoose = require('mongoose');
+    let ObjectId = new mongoose.Types.ObjectId(cid);
+
+
+    try {
+        let bill = await Cart.aggregate([
+                    {'$match': { _id : ObjectId }},
+                    {$unwind:"$products"},
+                    { $lookup: { from: "products", localField: "products.product_id", foreignField: "_id", as: "productObject" }},
+                    { $unwind: "$products" },
+                    {$unwind: "$productObject"},
+                    {$project:{_id:1,
+                           producto:{product_id:"$productObject._id",
+                                     title:"$productObject.title",
+                                     price:"$productObject.price",
+                                     description:"$productObject.description",
+                                     code:"$productObject.code",
+                                     price:"$productObject.price",
+                                     status:"$productObject.status",
+                                     stock:"$productObject.stock",
+                                     category:"$productObject.category",
+                                     quantity:'$products.quantity',
+                                     total:{$multiply:["$productObject.price","$products.quantity"]}
+                                     }
+                           }},
+                
+                    {$group:{_id: "$_id",
+                            "producto": { "$push": "$producto" }}},
+                    {$project:{_id:1,
+                        total:{
+                            $sum:"$producto.total"
+                        }
+                    }}
+                   ])
+
+
+        return bill
 
     } catch (error){
         console.log(error);

@@ -61,6 +61,25 @@ router.put("/:cid/product/:pid/:units", async (req,res)=>{
 })
 
 
+
+
+router.get("/bills/:cid", async (req,res)=>{
+    try {
+    let {cid} = req.params
+
+    let respuesta = await manager.calculateBill(cid)
+
+    res.status(200).json({
+        success:true,
+        response:respuesta
+    })
+
+    }catch(error){
+        console.log(error)
+    } 
+})
+
+
 router.delete("/:cid/product/:pid", async (req,res)=>{
     try{
         let {cid,pid} = req.params

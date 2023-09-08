@@ -73,10 +73,10 @@ router.get("/carts",async (req,res)=>{
   
     
     
-    console.log(prod[0]['products'])
+    console.log(prod[0])
 
     res.render('homeCart',
-              {productos:prod[0]['products']})
+              {productos:prod[0]})
     
 
 })
