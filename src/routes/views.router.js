@@ -13,8 +13,6 @@ const cartManager = new CartManager();
 router.get("/",async (req,res)=>{
     let productos = await manager.getProducts();
 
-    console.log(productos)
-
     let testUser = {
         name: 'fer',
         lastname: 'for'
@@ -36,7 +34,6 @@ router.get("/new_product",async (req,res)=>{
 router.get("/products",async (req,res)=>{
     let productos = await manager.getProducts();
 
-    console.log(productos)
 
     let testUser = {
         name: 'fer',

@@ -1,18 +1,45 @@
 <div>
     <h1>Lista de todos los articulos</h1>
-        <div>
-             {{#each productos}}
-            <p> 
-              id: {{./this._id}},
-              title: {{./this.title}}, 
-              description: {{./this.description}},
-              code: {{./this.code}},
-              price: {{./this.price}},
-              status: {{./this.status}},
-              stock: {{./this.stock}},
-              category: {{./this.category}}
-            </p>
-            {{/each}}
-        </div>
-</div>
-
+      <form id="form" action="">
+        <ul>
+            <li>
+            <label for="Filtrar por texto">Filtro por title:</label>
+            <input type="text" id="title_filter"/>
+            </li>
+        </ul>
+      </form>
+      <button type="submit" id="button_filter">Filter</button>
+      
+  <div>
+    <button id='previus' class="button button1"><</button>
+    <input type="text" id="page" size="1"/>
+    <button id='next' class="button button1">></button>
+  </div>
+  <table id="table">
+    <thead>
+      <th>id</th>
+      <th>title</th>
+      <th>description</th>
+      <th>code</th>
+      <th>price</th>
+      <th>status</th>
+      <th>stock</th>
+      <th>category</th>
+    </thead>
+     {{#each productos}}
+      <thead>
+      <th>{{./this._id}}</th>
+      <th>{{./this.title}}</th>
+      <th>{{./this.description}}</th>
+      <th>{{./this.code}}</th>
+      <th>{{./this.price}}</th>
+      <th>{{./this.status}}</th>
+      <th>{{./this.stock}}</th>
+      <th>{{./this.category}}</th>
+      </thead>
+      {{/each}}
+    <tbody id="body">
+    </tbody>
+  </table>
+<script src = "/socket.io/socket.io.js"></script>
+<script type="module"  src = "/js/products.js"></script>

@@ -9,14 +9,30 @@ export default class ProductManager {
     constructor() {
     }
 
-async getProducts() {
+async getProducts(word=null,page=null) {
     try {
-        let all = await Product.find().lean()
-        return all
+        if(page === null){
+           let page = 1
+        }
+        
+        let limit = 6
+        //En caso de que se quiera filtar por algun texto
+        if(word === null){
+            let all = await Product.find()
+                .skip(page && (page-1)*limit)  	
+                .limit(limit).lean()
+            return all
+        } else {
+            let all = await Product.find({title:{$regex:word}})
+                                        .skip(page && (page-1)*limit)  	
+                                        .limit(limit).lean()
+            return all
+        }
     } catch (error) {
         return error
     }
 }
+
 
 
 addProduct = async (producto) => {

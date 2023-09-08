@@ -2,7 +2,8 @@ import { model,Schema } from "mongoose"
 
 let collection = 'products'
 let schema = new Schema({
-    title: { type:String,required:true },
+    //Se creal index para title
+    title: { type:String,required:true,index:true},
     description: { type:String,required:true},
     code: { type:Number,required:true,unique:true},
     price: { type:Number,required:true },

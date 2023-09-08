@@ -48,11 +48,6 @@ async getCarts() {
                         }}
             ])
             
-            
-            
-            
-             
-    
             return all
         } catch (error) {
             console.log(error);

@@ -50,6 +50,16 @@ socketServer.on('connection',async socket=>{
         socket.emit("respuestaCreacion",respuesta)
     })
 
+    socket.on('filter',async data=>{
+        const respuesta = await manager.getProducts(data['text'],data['page'])
+        socket.emit("updateList",respuesta)
+    })
+
+    socket.on('changePage',async data=>{
+        const respuesta = await manager.getProducts(data['text'],data['page'])
+        socket.emit("updateList",respuesta)
+    })
+
     
     
 
