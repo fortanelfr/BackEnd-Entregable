@@ -13,7 +13,41 @@ export default class CartManager {
 
 async getCarts() {
         try {
-            let all = await Cart.find()
+            //let all = await Cart.find().lean()
+
+            
+            
+            
+            let all = await Cart.aggregate([
+               {'$match': { _id : {$exists: true} }},
+               {$unwind:"$products"},
+               { $lookup: { from: "products", localField: "products.product_id", foreignField: "_id", as: "productObject" }},
+               { $unwind: "$products" },
+               {$unwind: "$productObject"},
+               {$project:{_id:1,
+                           producto:{product_id:"$productObject._id",
+                                     title:"$productObject.title",
+                                     price:"$productObject.price",
+                                     description:"$productObject.description",
+                                     code:"$productObject.code",
+                                     price:"$productObject.price",
+                                     status:"$productObject.status",
+                                     stock:"$productObject.stock",
+                                     category:"$productObject.category",
+                                     quantity:'$products.quantity'
+                                     }
+                           }},
+                
+                {$sort:{"producto.title":1}},
+                {$group:{_id: "$_id",
+                        "producto": { "$push": "$producto" }}}
+            ])
+            
+            
+            
+            
+             
+    
             return all
         } catch (error) {
             console.log(error);

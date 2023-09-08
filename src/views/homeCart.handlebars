@@ -1,0 +1,21 @@
+<div>
+    <h1>Primer Carrito</h1>
+        <div>
+
+            {{#each productos}}
+            <p> 
+              id: {{./this.product_id._id}},
+              title: {{./this.product_id.title}}, 
+              description: {{./this.product_id.description}},
+              code: {{./this.product_id.code}},
+              price: {{./this.product_id.price}},
+              status: {{./this.product_id.status}},
+              stock: {{./this.product_id.stock}},
+              category: {{./this.product_id.category}}
+            </p>
+            {{/each}}
+     
+
+        </div>
+</div>
+

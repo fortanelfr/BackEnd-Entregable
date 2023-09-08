@@ -1,9 +1,11 @@
 import { Router } from "express";
 import ProductManager from '../managers/productManager.js';
+import CartManager from '../managers/cartManager.js';
 
 
 const router = Router();
 const manager = new ProductManager();
+const cartManager = new CartManager();
 
 
 
@@ -59,6 +61,22 @@ router.get("/products/:pid",async (req,res)=>{
 
     res.render('home',
               {productos:prod})
+    
+
+})
+
+router.get("/carts",async (req,res)=>{
+    let {pid} = req.params
+
+
+    let prod = await cartManager.getCarts();
+  
+    
+    
+    console.log(prod[0]['products'])
+
+    res.render('homeCart',
+              {productos:prod[0]['products']})
     
 
 })
