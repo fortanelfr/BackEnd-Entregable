@@ -1,0 +1,37 @@
+<div>
+    <h1>Crear usuario</h1>
+      <form id="form" action="">
+        <ul>
+            <li>
+            <label for="Name">Name:</label>
+            <input type="text" id="name"/>
+            </li>
+             <li>
+            <label for="mail">Mail:</label>
+            <input type="text" id="mail"/>
+            </li>
+            <li>
+            <label for="mail">Age:</label>
+            <input type="text" id="Age"/>
+            </li>
+            <li>
+            <label for="Mail">Rol (0 usuario comun o 1 administrador):</label>
+            <select name="language" id="rol">
+                <option value="comun">0</option>
+                <option value="admin">1</option>
+            </select>
+            </li>
+            <li>
+            <label for="mail">Password:</label>
+            <input type="text" id="password"/>
+            </li>
+        </ul>
+      </form>
+      <button type="submit" id="button_filter">Filter</button>
+      
+  <div>
+
+
+
+<script src = "/socket.io/socket.io.js"></script>
+<script type="module"  src = "/js/products.js"></script>

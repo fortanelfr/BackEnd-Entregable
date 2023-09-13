@@ -2,6 +2,7 @@ import express from 'express';
 import handlebars from 'express-handlebars';
 import productRouter from './routes/products.router.js'
 import cartRouter from './routes/carts.router.js'
+import authRouter from './routes/auth.router.js'
 import viewsRouter from './routes/views.router.js'
 import __dirname from './utils.js'
 import {Server} from 'socket.io'
@@ -32,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use('/api/carts',cartRouter);
 app.use('/api/products',productRouter);
+app.use('/api/auth',authRouter);
 app.use(express.static(__dirname + '/public'))
 app.use('/',viewsRouter);
 
