@@ -30,6 +30,14 @@ router.get("/new_product",async (req,res)=>{
     res.render('new_product')
 })
 
+router.get("/register",async (req,res)=>{
+    res.render('register')
+})
+
+router.get("/login",async (req,res)=>{
+    res.render('login')
+})
+
 
 router.get("/products",async (req,res)=>{
     let productos = await manager.getProducts();

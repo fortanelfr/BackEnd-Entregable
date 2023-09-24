@@ -8,7 +8,7 @@ export default function (req,res,next) {
                 status:400,
                 method:req.method,
                 path: req.url,
-                response: 'name, mail and password are required'
+                message: 'name, mail and password are required'
             })
          }         
     } catch (error) {

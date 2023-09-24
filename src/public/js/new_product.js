@@ -1,7 +1,6 @@
 const socket = io();
 
 
-
 const title_v = document.getElementById('title');
 const description_v = document.getElementById('description');
 const code_v = document.getElementById('code');

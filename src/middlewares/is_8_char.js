@@ -7,8 +7,8 @@ export default function (req,res,next) {
             return res.status(411).json({
                 status:411,
                 method:req.method,
-                path: req.url,
-                response: 'password must have at least 8 characters'
+                path: req.url,  
+                message: 'password must have at least 8 characters'
             })
          }         
     } catch (error) {

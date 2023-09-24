@@ -1,3 +1,4 @@
+import "dotenv/config.js";
 import express from 'express';
 import handlebars from 'express-handlebars';
 import productRouter from './routes/products.router.js'
@@ -8,6 +9,11 @@ import __dirname from './utils.js'
 import {Server} from 'socket.io'
 import ProductManager from './managers/productManager.js';
 import { connect } from 'mongoose';
+import cookieParser from 'cookie-parser'
+import expressSession from 'express-session';
+import MongoStore  from 'connect-mongo';
+import is_admin from "./middlewares/is_admin.js";
+import axios from "axios";
 
 
 const manager = new ProductManager();
@@ -21,6 +27,20 @@ const ready = ()=> {
 
 
 const app = express();
+
+app.use(cookieParser(process.env.SECRET_COOKIE))
+ 
+app.use(expressSession({
+    store: MongoStore.create({
+        mongoUrl: process.env.LINK_DB,
+        ttl:60*60*24*7
+    }),
+    secret: process.env.SECRET_SESSION,
+    resave: true,
+    saveUninitialized: true
+}))
+
+
 const httpServer = app.listen(PORT,ready)
 
 const socketServer = new Server(httpServer);
@@ -50,6 +70,28 @@ socketServer.on('connection',async socket=>{
     socket.on('create',async data=>{
         const respuesta = await manager.addProduct(data)
         socket.emit("respuestaCreacion",respuesta)
+    })
+
+    socket.on('create_user',async data=>{
+        //var axios = require('axios');
+
+        axios.post("http://localhost:8080/api/auth/register", data)
+             .then((res) => {
+                socket.emit("respuestaCreacion",res.data)
+                }).catch((err) => {
+                    socket.emit("respuestaCreacion",err.response.data)
+                });
+    })
+    
+    socket.on('login',async data=>{
+        //var axios = require('axios');
+
+        axios.post("http://localhost:8080/api/auth/login", data)
+             .then((res) => {
+                socket.emit("respuestaCreacion",res.data)
+                }).catch((err) => {
+                    socket.emit("respuestaCreacion",err.response.data)
+                });
     })
 
     socket.on('filter',async data=>{
