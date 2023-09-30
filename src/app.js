@@ -14,6 +14,8 @@ import expressSession from 'express-session';
 import MongoStore  from 'connect-mongo';
 import is_admin from "./middlewares/is_admin.js";
 import axios from "axios";
+import passport from "passport";
+import inicializePassport from "./middlewares/passport.js";
 
 
 const manager = new ProductManager();
@@ -40,7 +42,6 @@ app.use(expressSession({
     saveUninitialized: true
 }))
 
-
 const httpServer = app.listen(PORT,ready)
 
 const socketServer = new Server(httpServer);
@@ -48,7 +49,9 @@ const socketServer = new Server(httpServer);
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
-
+inicializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use('/api/carts',cartRouter);
