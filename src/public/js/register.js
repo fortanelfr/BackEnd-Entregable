@@ -5,7 +5,6 @@ const name = document.getElementById('name');
 const photo = document.getElementById('photo');
 const mail = document.getElementById('mail');
 const age = document.getElementById('age');
-const rol = document.getElementById('rol');
 const password = document.getElementById('password');
 
 
@@ -15,7 +14,7 @@ const button_creacion = document.getElementById('button_creacion');
 
 button_creacion.addEventListener("click", async evt =>{
 
-    const user = {name:name.value,photo:photo.value,mail:mail.value,age:age.value,rol:rol.value,password:password.value};
+    const user = {name:name.value,photo:photo.value,mail:mail.value,age:age.value,rol:0,password:password.value};
     socket.emit('create_user', user);
 });
 
@@ -26,6 +25,10 @@ socket.on('respuestaCreacion',data=>{
     respuesta.innerHTML = data.message
 
 })
+
+document.getElementById("github").onclick = function () {
+    location.href = "http://localhost:8080/api/auth/github";
+};
 
 
 

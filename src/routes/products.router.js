@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductManager from '../managers/productManager.js';
 import is_admin from "../middlewares/is_admin.js";
+import verify_token from "../middlewares/verify_token.js";
 
 const router = Router();
 const manager = new ProductManager();
@@ -53,7 +54,7 @@ router.get("/:pid",async (req,res)=>{
 
 })
 
-router.post("/", is_admin,async (req,res)=>{
+router.post("/", verify_token ,is_admin,async (req,res)=>{
     
     const respuesta = await manager.addProduct(req.body);
 

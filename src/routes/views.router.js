@@ -3,6 +3,7 @@ import ProductManager from '../managers/productManager.js';
 import CartManager from '../managers/cartManager.js';
 
 
+
 const router = Router();
 const manager = new ProductManager();
 const cartManager = new CartManager();
@@ -11,19 +12,25 @@ const cartManager = new CartManager();
 
 
 router.get("/",async (req,res)=>{
-    let productos = await manager.getProducts();
-
-    let testUser = {
-        name: 'fer',
-        lastname: 'for'
-    }
-
-    res.render('home',
-    {user:testUser,
-     productos})
+    if (req.user){
+        let productos = await manager.getProducts();
     
-
-})
+    
+        let testUser = {
+            name: 'fer',
+            lastname: 'for'
+        }
+    
+        res.render('home',
+        {user:testUser,
+         productos})
+        } else {
+            //Si no está logeado regresa a la pagina de login
+            res.redirect('http://localhost:8080/login/');
+        }
+        
+    
+    })
 
 
 router.get("/new_product",async (req,res)=>{
@@ -40,6 +47,7 @@ router.get("/login",async (req,res)=>{
 
 
 router.get("/products",async (req,res)=>{
+    if (req.user){
     let productos = await manager.getProducts();
 
 
@@ -51,6 +59,10 @@ router.get("/products",async (req,res)=>{
     res.render('home',
     {user:testUser,
      productos})
+    } else {
+        //Si no está logeado regresa a la pagina de login
+        res.redirect('http://localhost:8080/login/');
+    }
     
 
 })
@@ -93,5 +105,20 @@ router.get("/realTimeProducts",async (req,res)=>{
     
 
 })
+
+
+router.get('/signed/get',async(req,res,next)=> {
+    try {
+        return res.status(200).json(req.signedCookies)
+    } catch (error) {
+        next(error)
+    }
+})
+
+
+
+
+
+
 
 export default router;

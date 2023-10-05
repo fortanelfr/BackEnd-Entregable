@@ -17,12 +17,17 @@ button_creacion.addEventListener("click", async evt =>{
 
 
 socket.on('respuestaCreacion',data=>{
-    console.log(data)
     const respuesta = document.getElementById('respuesta');
     respuesta.innerHTML = data.message
-
+    if (data.token){
+        location.href = "http://localhost:8080/products/";
+    }
 })
 
+
+document.getElementById("github").onclick = function () {
+    location.href = "http://localhost:8080/api/auth/github";
+};
 
 
 

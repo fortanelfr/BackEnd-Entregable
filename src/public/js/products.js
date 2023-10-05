@@ -89,5 +89,11 @@ socket.on('updateList',data=>{
 
 
 
+const close_session = document.getElementById('close_session');
+close_session.addEventListener('click', evt => {
+    socket.emit('close_session', 'hola');
+})
+
+
 
 

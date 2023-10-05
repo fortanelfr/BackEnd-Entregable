@@ -31,7 +31,9 @@ const ready = ()=> {
 const app = express();
 
 app.use(cookieParser(process.env.SECRET_COOKIE))
- 
+
+
+
 app.use(expressSession({
     store: MongoStore.create({
         mongoUrl: process.env.LINK_DB,
@@ -41,6 +43,8 @@ app.use(expressSession({
     resave: true,
     saveUninitialized: true
 }))
+
+
 
 const httpServer = app.listen(PORT,ready)
 
@@ -59,6 +63,7 @@ app.use('/api/products',productRouter);
 app.use('/api/auth',authRouter);
 app.use(express.static(__dirname + '/public'))
 app.use('/',viewsRouter);
+app.enable('trust proxy')
 
 
 socketServer.on('connection',async socket=>{
@@ -88,8 +93,9 @@ socketServer.on('connection',async socket=>{
     
     socket.on('login',async data=>{
         //var axios = require('axios');
-
-        axios.post("http://localhost:8080/api/auth/login", data)
+        console.log('login')
+        axios.post("http://localhost:8080/api/auth/login", data
+                                                         , {withCredentials: true})
              .then((res) => {
                 socket.emit("respuestaCreacion",res.data)
                 }).catch((err) => {
@@ -105,6 +111,16 @@ socketServer.on('connection',async socket=>{
     socket.on('changePage',async data=>{
         const respuesta = await manager.getProducts(data['text'],data['page'])
         socket.emit("updateList",respuesta)
+    })
+
+    socket.on('close_session',async data=>{
+        axios.post("http://localhost:8080/api/auth/signout", data
+                                                           ,{withCredentials: true})
+             .then((res) => {
+                socket.emit("close_output",res.data)
+                }).catch((err) => {
+                    socket.emit("close_output",err.response.data)
+                });
     })
 
     
