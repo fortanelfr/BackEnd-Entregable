@@ -40,7 +40,6 @@ router.post("/login", is_8_char,
         req.session.mail = req.user.mail
         req.session.role = req.user.role
 
-        console.log(req._id)
         
         return res.status(200).json({
             session: req.session,
@@ -92,6 +91,7 @@ router.get('/github/callback',
                 token: req.session.token
             })
             */
+            
             res.redirect('http://localhost:8080/products/');
     }
 )

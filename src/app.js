@@ -93,7 +93,6 @@ socketServer.on('connection',async socket=>{
     
     socket.on('login',async data=>{
         //var axios = require('axios');
-        console.log('login')
         axios.post("http://localhost:8080/api/auth/login", data
                                                          , {withCredentials: true})
              .then((res) => {

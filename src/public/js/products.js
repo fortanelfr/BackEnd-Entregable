@@ -90,9 +90,27 @@ socket.on('updateList',data=>{
 
 
 const close_session = document.getElementById('close_session');
-close_session.addEventListener('click', evt => {
-    socket.emit('close_session', 'hola');
+    close_session.addEventListener('click', async event => {
+    event.preventDefault();
+    let config = {
+    method: "POST",
+    headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer "+localStorage.getItem('token')
+    },
+    };
+    try {
+    let response = await fetch("/api/auth/signout", config);
+    alert('Sesion cerrada');
+    if (response.status === 200) {
+        location.href = "http://localhost:8080/login/";
+    }
+    } catch (error) {
+    console.log(error);
+    }
 })
+
+
 
 
 
